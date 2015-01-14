@@ -5,7 +5,7 @@ tweets = list()
 # Loop through the keywords and store results
 
   for(i in 1:length(query)){
-    result<-searchTwitter(query[i],n=numberTweets)
+    result<-searchTwitter(query[i],n=numberTweets, lang="en")
     tweets <- c(tweets,result)
     tweets <- unique(tweets)
   }
