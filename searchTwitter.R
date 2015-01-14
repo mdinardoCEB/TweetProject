@@ -1,11 +1,11 @@
-queryToCSV <- function(query, saveFile) {
+queryToCSV <- function(query, numberTweets, saveFile) {
 
 tweets = list()
 
 # Loop through the keywords and store results
 
   for(i in 1:length(query)){
-    result<-searchTwitter(query[i],n=5000)
+    result<-searchTwitter(query[i],n=numberTweets)
     tweets <- c(tweets,result)
     tweets <- unique(tweets)
   }
@@ -28,9 +28,3 @@ tweets = list()
 
 } 
 
-<<<<<<< HEAD
-# Done!
-# Message
-=======
-# Done!
->>>>>>> a177f309c4f296b6b10d6e20484aabcf50438e3a
