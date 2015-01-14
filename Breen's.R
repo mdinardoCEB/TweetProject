@@ -193,6 +193,30 @@ dev.off()
 
 ############# Word Cloud ##############
 
+# separating text by emotion
+emos = levels(factor(sentimentresults$emotion))
+nemo = length(emos)
+emo.docs = rep("", nemo)
+for (i in 1:nemo)
+{
+   tmp = tweettextz[emotion == emos[i]]
+   emo.docs[i] = paste(tmp, collapse=" ")
+}
+
+# remove stopwords
+emo.docs = removeWords(emo.docs, stopwords("english"))
+# create corpus
+corpus = Corpus(VectorSource(emo.docs))
+tdm = TermDocumentMatrix(corpus)
+tdm = as.matrix(tdm)
+colnames(tdm) = emos
+
+pdf("C:\\Users\\jlewyckyj\\Desktop\\Twitter\\Wordcloud_Emotion.pdf")
+# comparison word cloud
+comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
+   scale = c(3,.5), random.order = FALSE, title.size = 1.5)
+
+
 
 
 
