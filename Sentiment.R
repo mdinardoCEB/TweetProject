@@ -147,7 +147,7 @@ try.error = function(x)
 }
 # lower case using try.error with sapply 
 tweettextz = sapply(tweettextz, try.error)
-# remove NAs in some_txt
+# remove NAs in tweettextz
 tweettextz = tweettextz[!is.na(tweettextz)]
 names(tweettextz) = NULL
 
@@ -178,6 +178,7 @@ geom_bar(aes(y=..count.., fill=emotion)) +
 scale_fill_brewer(palette="Dark2") +
 labs(x="emotion categories", y="number of tweets",title = "Sentiment Analysis of Tweets about Banks") +
 theme(plot.title = element_text(size=12))
+dev.off()
 
 pdf("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\Polarity.New.pdf")
 # plot distribution of polarity
@@ -186,8 +187,6 @@ geom_bar(aes(y=..count.., fill=polarity)) +
 scale_fill_brewer(palette="Dark2") +
 labs(x="polarity categories", y="number of tweets",title = "Sentiment Analysis of Tweets about Banks") +
 theme(plot.title = element_text(size=12))
-
-# Turn off #
 dev.off()
 
 ############# Word Cloud ##############
