@@ -1,3 +1,5 @@
+############# Breen's Approach ##############
+
 # function score.sentiment
 score.sentiment = function(sentences, pos.words, neg.words, 
 .progress='none')
@@ -59,16 +61,16 @@ score.sentiment = function(sentences, pos.words, neg.words,
 }
 
 # import positive and negative words
-pos = readLines("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\positive_words.txt")
-neg = readLines("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\negative_words.txt")
+pos = readLines(".\\positive_words.txt")
+neg = readLines(".\\negative_words.txt")
 
-tweets <- read.csv(file="C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\TweetsDB.csv",head=TRUE,sep=",")
+tweets <- read.csv(file=".\\TweetsDB.csv",head=TRUE,sep=",")
 
 tweettext <- tweets$text
 scores <- score.sentiment(tweettext, pos, neg, .progress='text')
 
-############# Chart #####################
-pdf("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\BreenScores.pdf")
+############# Breen's Score Chart #####################
+pdf(".\\BreenScores.pdf")
 # plot distribution of scores
 ggplot(scores, aes(x=score)) +
 geom_bar(aes(y=..count.., fill=score)) +
@@ -79,21 +81,23 @@ scale_x_continuous(breaks=seq(-4,5,1))
 # turn off #
 dev.off()
 
-### Wait on this ###
+
 scores$very.pos = as.numeric(scores$score >= 2)
 scores$very.neg = as.numeric(scores$score <= -2)
 numpos = sum(scores$very.pos)
 numneg = sum(scores$very.neg)
 global_score = round(100*numpos / (numpos+numneg))
 
-################### Spreadsheet ###########################
-write.csv(scores, "C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\Breen.New.csv")
+################### Breen's Spreadsheet ###########################
+write.csv(scores, ".\\Breen.New.csv")
 
 
-tweettextc <- as.character(tweettext)
-chars_per_tweet = sapply(tweettextc, nchar)
-words_list = strsplit(tweettextc, " ")
-words_per_tweet = sapply(words_list, length)
+#### Some Frequency Analysis ####
+
+tweetTextc <- as.character(tweettext)
+chars_Per_Tweet = sapply(tweettextc, nchar)
+words_List = strsplit(tweettextc, " ")
+words_Per_Tweet = sapply(words_list, length)
 barplot(table(chars_per_tweet), border= NA,
    main="Distribution of characters per tweet", cex.main=1)
 barplot(table(words_per_tweet), border= NA,
@@ -102,24 +106,30 @@ barplot(table(words_per_tweet), border= NA,
 # most frequent words
 mfw = sort(table(unlist(words_list)), decreasing=TRUE)
 # top-20 most frequent
-top20words = head(mfw, 20)
-top50words = head(mfw, 50)
-top100words = head(mfw, 100)
+top20Words = head(mfw, 20)
+top50Words = head(mfw, 50)
+top100Words = head(mfw, 100)
 barplot(top50words, border=NA, las=2, main="Top 50 most frequent terms",
 cex.main=1)
 
+# get the hashtags
+hashtags = str_extract_all(tweettext, "#\\w+")
+# put tags in vector
+hashtags_V = unlist(hashtags)
+# calculate hashtag frequencies
+hashtags_Freq = table(hashtags_V)
+# hashtags wordcloud
+pdf(".\\HashtagWordcloud.pdf")
+wordcloud(names(hashtags_Freq), hashtags_Freq, random.order=FALSE,
+    colors="#1B9E77")
+title("\n\nHashtags in Tweets about Banks",
+    cex.main=1.5, col.main="gray50")
+dev.off()
 
-
-
-install.packages("C:\\Users\\jlewyckyj\\Downloads\\sentiment_0.1.tar.gz",lib="C:\\Users\\jlewyckyj\\Desktop\\Twitter",repos=NULL)
-
+#### Install Sentiment Package ####
 install_url("http://cran.r-project.org/src/contrib/Archive/sentiment/sentiment_0.2.tar.gz")
 require(sentiment)
 ls("package:sentiment")
-
-
-
-
 
 
 ############ Sentiment Package #######################
@@ -167,11 +177,17 @@ sentimentresults = within(sentimentresults,
    emotion <- factor(emotion, levels=names(sort(table(emotion),
   decreasing=TRUE))))
 
-################ Spreadsheet ##########################
-write.csv(sentimentresults, "C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\sentiment.new.csv")
+sentimentresultsPlus <- data.frame(text=tweettextz, anger=class_emo[,1], disgust=class_emo[,2], fear=class_emo[,3], joy=class_emo[,4], sadness=class_emo[,5], surprise=class_emo[,6], emotion=emotion, pos=class_pol[,1], neg=class_pol[,2], pos_neg=class_pol[,3], polarity=polarity, stringsAsFactors=FALSE)   
 
-############ Charts #####################
-pdf("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\Emotion.New.pdf")
+################ Sentiment Package Spreadsheet ##########################
+write.csv(sentimentresults, ".\\sentiment.new.csv")
+
+#################### Combined Spreadsheet ####################
+write.csv(c(scores,sentimentresultsPlus), ".\\sentiment.new.Plus.csv")
+
+
+############ Sentiment Package Charts #####################
+pdf(".\\Emotion.New.pdf")
 # plot distribution of emotions
 ggplot(sentimentresults, aes(x=emotion)) +
 geom_bar(aes(y=..count.., fill=emotion)) +
@@ -180,7 +196,7 @@ labs(x="emotion categories", y="number of tweets",title = "Sentiment Analysis of
 theme(plot.title = element_text(size=12))
 dev.off()
 
-pdf("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\Polarity.New.pdf")
+pdf(".\\Polarity.New.pdf")
 # plot distribution of polarity
 ggplot(sentimentresults, aes(x=polarity)) +
 geom_bar(aes(y=..count.., fill=polarity)) +
@@ -189,7 +205,7 @@ labs(x="polarity categories", y="number of tweets",title = "Sentiment Analysis o
 theme(plot.title = element_text(size=12))
 dev.off()
 
-############# Word Cloud ##############
+############# Sentiment Package Comparison Cloud ##############
 
 # separating text by emotion
 emos = levels(factor(sentimentresults$emotion))
@@ -209,12 +225,74 @@ tdm = TermDocumentMatrix(corpus)
 tdm = as.matrix(tdm)
 colnames(tdm) = emos
 
-pdf("C:\\Users\\jlewyckyj\\Desktop\\TweetProject\\Wordcloud_Emotion.New.pdf")
+pdf(".\\Wordcloud_Emotion.New.pdf")
 # comparison word cloud
 comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
    scale = c(3,.5), random.order = FALSE, title.size = 1.5)
+dev.off()
 
 
 
 
 
+############ Comparison Wordcloud: Top 4 ##################
+# @ChaseSupport @BofA_Help @AskCiti @Ask_WellsFargo
+
+tweetTextBA <- grep("BofA_Help", tweettext, ignore.case=TRUE, value=TRUE)
+write.csv(tweetTextBA, ".\\BofA.csv")
+tweetTextCi <- grep("askCiti", tweettext, ignore.case=TRUE, value=TRUE)
+write.csv(tweetTextCi, ".\\Citi.csv")
+tweetTextCh <- grep("ChaseSupport", tweettext, ignore.case=TRUE, value=TRUE)
+write.csv(tweetTextCh, ".\\Chase.csv")
+tweetTextWF <- grep("Ask_WellsFargo", tweettext, ignore.case=TRUE, value=TRUE)
+write.csv(tweetTextWF, ".\\WF.csv")
+
+clean.text = function(x)
+{
+   # tolower
+   x = tolower(x)
+   # remove rt
+   x = gsub("rt", "", x)
+   # remove at
+   x = gsub("@\\w+", "", x)
+   # remove punctuation
+   x = gsub("[[:punct:]]", "", x)
+   # remove numbers
+   x = gsub("[[:digit:]]", "", x)
+   # remove links http
+   x = gsub("http\\w+", "", x)
+   # remove tabs
+   x = gsub("[ |\t]{2,}", "", x)
+   # remove blank spaces at the beginning
+   x = gsub("^ ", "", x)
+   # remove blank spaces at the end
+   x = gsub(" $", "", x)
+   return(x)
+}
+
+BA_Clean = clean.text(tweetTextBA)
+Ci_Clean = clean.text(tweetTextCi)
+Ch_Clean = clean.text(tweetTextCh)
+WF_Clean = clean.text(tweetTextWF)
+
+vector_BA = paste(BA_Clean, collapse=" ")
+vector_Ci = paste(Ci_Clean, collapse=" ")
+vector_Ch = paste(Ch_Clean, collapse=" ")
+vector_WF = paste(WF_Clean, collapse=" ")
+vector_All = c(vector_BA, vector_Ci, vector_Ch, vector_WF)
+
+# create corpus
+corpusComp = Corpus(VectorSource(vector_All))
+# create term-document matrix
+tdmComp= TermDocumentMatrix(corpusComp)
+# convert as matrix
+tdmComp = as.matrix(tdmComp)
+# add column names
+colnames(tdmComp) = c("BofA", "Citi", "Chase", "Wells Fargo")
+
+# comparison cloud
+pdf(".\\Wordcloud_Top4.pdf")
+comparison.cloud(tdmComp, random.order=FALSE,
+colors = c("#00B2FF", "red", "#FF0099", "#6600CC"),
+title.size=1.5, max.words=500)
+dev.off()
