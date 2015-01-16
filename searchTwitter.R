@@ -106,3 +106,32 @@ score.TweetDb <- function(tweetsFile, posWordFile, negWordFile) {
   scores$tweetId <- tweetID
   scores
 }
+
+wordCloudTweets <- function(tweetText, stopWordsVec) {
+
+  #mach_tweets = searchTwitter("Morgan Stanley", n = 10)
+
+  #mach_text = sapply(mach_tweets, function(x) x$getText())
+
+  #create a corpus
+  mach_corpus = Corpus(VectorSource(tweetText))
+
+  # create document term matrix applying some transformations
+
+  tdm = TermDocumentMatrix(mach_corpus,
+                         control = list(removePunctuation = TRUE,
+                                        stopwords = stopWordsVec, stopwords("english"),
+                                        removeNumbers = TRUE, tolower = TRUE))
+
+  # define tdm as matrix
+  m = as.matrix(tdm)
+  # get word counts in decreasing order
+  word_freqs = sort(rowSums(m), decreasing=TRUE) 
+  # create a data frame with words and their frequencies
+  dm = data.frame(word=names(word_freqs), freq=word_freqs)
+
+  # plot wordcloud
+  #pdf("C:/Users/mdinardo/Desktop/MatTwitterWordcloud2.pdf")
+  wordcloud(max.words = 200, dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
+  #dev.off()
+}
