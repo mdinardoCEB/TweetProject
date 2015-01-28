@@ -9,6 +9,3 @@ access_token_secret <- "5OIQC1AJ5hNtiaWfoiWFCDzb6YVVBGXzY3syCWUvi4Hbw"
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 
 source("searchTwitter.R")
-
-
-queryToCSV(c("CEB"), "test.csv")
