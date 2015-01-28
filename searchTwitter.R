@@ -1,4 +1,5 @@
-queryToCSV <- function(query, numberTweets, saveFile) {
+queryToCSV <- function(query = c("@ChaseSupport", "@BofA_Help", "@Ask_WellsFargo", "@AskCiti", "@askusbank", "@PNCBank_Help", "@AskCapitalOne", "@AskSunTrust", "@askBBT", "@HSBS_US_Help", "@HSBC_UK_Help", "@EverBankHelp", "@AskRBC", "@ScotiabankHelps", "@AskAmex")
+, numberTweets, saveFile) {
 
 tweets = list()
 
