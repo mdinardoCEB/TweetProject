@@ -89,7 +89,7 @@ scores <- score.sentiment(tweettext, pos, neg, .progress='text')
 ############# Breen's Score Chart #####################
 pdf(".\\BreenScores.pdf")
 # plot distribution of scores
-ggplot(scores, aes(x=score)) +
+ggplot(fullData, aes(x=score)) +
 geom_bar(aes(y=..count.., fill=score)) +
 scale_fill_brewer(palette="Dark2") +
 labs(x="score", y="number of tweets",title = "Sentiment Analysis of Tweets about Banks") +
@@ -126,7 +126,7 @@ mfw = sort(table(unlist(words_list)), decreasing=TRUE)
 top20Words = head(mfw, 20)
 top50Words = head(mfw, 50)
 top100Words = head(mfw, 100)
-barplot(top50words, border=NA, las=2, main="Top 50 most frequent terms",
+barplot(top100words, border=NA, las=2, main="Top 50 most frequent terms",
 cex.main=1)
 
 # get the hashtags
@@ -201,7 +201,7 @@ write.csv(fullData, ".\\FullData.csv")
 ############ Sentiment Package Histogram Charts #####################
 pdf(".\\Emotion.pdf")
 # plot distribution of emotions
-ggplot(sentimentresults, aes(x=emotion)) +
+ggplot(fullData, aes(x=emotion)) +
 geom_bar(aes(y=..count.., fill=emotion)) +
 scale_fill_brewer(palette="Dark2") +
 labs(x="emotion categories", y="number of tweets",title = "Sentiment Analysis of Tweets about Banks") +
@@ -210,7 +210,7 @@ dev.off()
 
 pdf(".\\Polarity.pdf")
 # plot distribution of polarity
-ggplot(sentimentresults, aes(x=polarity)) +
+ggplot(fullData, aes(x=polarity)) +
 geom_bar(aes(y=..count.., fill=polarity)) +
 scale_fill_brewer(palette="Dark2") +
 labs(x="polarity categories", y="number of tweets",title = "Sentiment Analysis of Tweets about Banks") +
@@ -243,64 +243,130 @@ comparison.cloud(tdm, colors = brewer.pal(nemo, "Dark2"),
    scale = c(3,.5), random.order = FALSE, title.size = 1.5)
 dev.off()
 
-################ Separate by Search Term #########################
-tweetTextBofA <- subset(fullData, grepl("@BofA_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextBofA, ".\\TweetsbyBank\\BofA.csv")
-tweetTextCiti <- subset(fullData, grepl("@AskCiti", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextCiti, ".\\TweetsbyBank\\Citi.csv")
-tweetTextChase <- subset(fullData, grepl("@ChaseSupport", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextChase, ".\\TweetsbyBank\\Chase.csv")
-tweetTextWellsFargo <- subset(fullData, grepl("@Ask_WellsFargo", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextWellsFargo, ".\\TweetsbyBank\\WellsFargo.csv")
-tweetTextUSBank <- subset(fullData, grepl("@askusbank", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextUSBank, ".\\TweetsbyBank\\USBank.csv")
-tweetTextPNC <- subset(fullData, grepl("@PNCBank_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextPNC, ".\\TweetsbyBank\\PNC.csv")
-tweetTextCapitalOne <- subset(fullData, grepl("@AskCapitalOne", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextCapitalOne, ".\\TweetsbyBank\\CapitalOne.csv")
-tweetTextSunTrust <- subset(fullData, grepl("@AskSunTrust", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextSunTrust, ".\\TweetsbyBank\\SunTrust.csv")
-tweetTextBBT <- subset(fullData, grepl("@askBBT", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextBBT, ".\\TweetsbyBank\\BBT.csv")
-tweetTextHSBC_US <- subset(fullData, grepl("@HSBC_US_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextHSBC_US, ".\\TweetsbyBank\\HSBC_US.csv")
-tweetTextHSBC_UK <- subset(fullData, grepl("@HSBC_UK_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextHSBC_UK, ".\\TweetsbyBank\\HSBC_UK.csv")
-tweetTextEverBank <- subset(fullData, grepl("@EverBankHelp", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextEverBank, ".\\TweetsbyBank\\EverBank.csv")
-tweetTextRBC <- subset(fullData, grepl("@AskRBC", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextRBC, ".\\TweetsbyBank\\RBC.csv")
-tweetTextScotia <- subset(fullData, grepl("@ScotiabankHelps", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextScotia, ".\\TweetsbyBank\\Scotia.csv")
-tweetTextAmex <- subset(fullData, grepl("@AskAmex", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextAmex, ".\\TweetsbyBank\\Amex.csv")
-tweetTextRegions <- subset(fullData, grepl("@askRegions", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextRegions, ".\\TweetsbyBank\\Regions.csv")
-tweetTextMT <- subset(fullData, grepl("@MandT_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextMT, ".\\TweetsbyBank\\M&T.csv")
-tweetTextKeyBank <- subset(fullData, grepl("@KeyBank_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextKeyBank, ".\\TweetsbyBank\\KeyBank.csv")
-tweetTextUSAA <- subset(fullData, grepl("@USAA_help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextUSAA, ".\\TweetsbyBank\\USAA.csv")
-tweetTextAlly <- subset(fullData, grepl("@AllyCare", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextAlly, ".\\TweetsbyBank\\Ally.csv")
-tweetTextSantanderUK <- subset(fullData, grepl("@santanderukhelp", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextSantanderUK, ".\\TweetsbyBank\\SantanderUK.csv")
-tweetTextSantanderUS <- subset(fullData, grepl("@SantanderBankUS", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextSantanderUS, ".\\TweetsbyBank\\SantanderUS.csv")
-tweetTextHuntington <- subset(fullData, grepl("@AskHuntington", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextHuntington, ".\\TweetsbyBank\\Huntington.csv")
-tweetTextSynchrony <- subset(fullData, grepl("@AskSynchrony", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextSynchrony, ".\\TweetsbyBank\\Synchrony.csv")
-tweetTextFirstMerit <- subset(fullData, grepl("@FirstMerit_Help", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextFirstMerit, ".\\TweetsbyBank\\FirstMerit.csv")
-tweetTextWebster <- subset(fullData, grepl("@AskWebster", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextWebster, ".\\TweetsbyBank\\Webster.csv")
-tweetTextZions <- subset(fullData, grepl("@AskZionsBank", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextZions, ".\\TweetsbyBank\\Zions.csv")
-tweetTextBarclays <- subset(fullData, grepl("@BarclaysOnline", fullData[[1]]), drop = TRUE)
-write.csv(tweetTextBarclays, ".\\TweetsbyBank\\Barclays.csv")
+############## Sentiment Score Function #####################
 
+sentimentScore <- function(df) {
+  length(df$polarity[df$polarity=="positive"])/length(df$polarity[df$polarity=="negative"])
+}
+
+################ Separate by Search Term #########################
+tweetsBofA <- subset(fullData, grepl("@BofA_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsBofA, ".\\TweetsbyBank\\BofA.csv")
+sentimentBofA <- sentimentScore(tweetsBofA)
+
+tweetsCiti <- subset(fullData, grepl("@AskCiti", fullData[[1]]), drop = TRUE)
+write.csv(tweetsCiti, ".\\TweetsbyBank\\Citi.csv")
+sentimentCiti <- sentimentScore(tweetsCiti)
+
+tweetsChase <- subset(fullData, grepl("@ChaseSupport", fullData[[1]]), drop = TRUE)
+write.csv(tweetsChase, ".\\TweetsbyBank\\Chase.csv")
+sentimentChase <- sentimentScore(tweetsChase)
+
+tweetsWellsFargo <- subset(fullData, grepl("@Ask_WellsFargo", fullData[[1]]), drop = TRUE)
+write.csv(tweetsWellsFargo, ".\\TweetsbyBank\\WellsFargo.csv")
+sentimentWellsFargo <- sentimentScore(tweetsWellsFargo)
+
+tweetsUSBank <- subset(fullData, grepl("@askusbank", fullData[[1]]), drop = TRUE)
+write.csv(tweetsUSBank, ".\\TweetsbyBank\\USBank.csv")
+sentimentUSBank <- sentimentScore(tweetsUSBank)
+
+tweetsPNC <- subset(fullData, grepl("@PNCBank_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsPNC, ".\\TweetsbyBank\\PNC.csv")
+sentimentPNC <- sentimentScore(tweetsPNC)
+
+tweetsCapitalOne <- subset(fullData, grepl("@AskCapitalOne", fullData[[1]]), drop = TRUE)
+write.csv(tweetsCapitalOne, ".\\TweetsbyBank\\CapitalOne.csv")
+sentimentCapitalOne <- sentimentScore(tweetsCapitalOne)
+
+tweetsSunTrust <- subset(fullData, grepl("@AskSunTrust", fullData[[1]]), drop = TRUE)
+write.csv(tweetsSunTrust, ".\\TweetsbyBank\\SunTrust.csv")
+sentimentSunTrust <- sentimentScore(tweetsSunTrust)
+
+tweetsBBT <- subset(fullData, grepl("@askBBT", fullData[[1]]), drop = TRUE)
+write.csv(tweetsBBT, ".\\TweetsbyBank\\BBT.csv")
+sentimentBBT <- sentimentScore(tweetsBBT)
+
+tweetsHSBC_US <- subset(fullData, grepl("@HSBC_US_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsHSBC_US, ".\\TweetsbyBank\\HSBC_US.csv")
+sentimentHSBC_US <- sentimentScore(tweetsHSBC_US)
+
+tweetsHSBC_UK <- subset(fullData, grepl("@HSBC_UK_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsHSBC_UK, ".\\TweetsbyBank\\HSBC_UK.csv")
+sentimentHSBC_UK <- sentimentScore(tweetsHSBC_UK)
+
+tweetsEverBank <- subset(fullData, grepl("@EverBankHelp", fullData[[1]]), drop = TRUE)
+write.csv(tweetsEverBank, ".\\TweetsbyBank\\EverBank.csv")
+sentimentEverBank <- sentimentScore(tweetsEverBank)
+
+tweetsRBC <- subset(fullData, grepl("@AskRBC", fullData[[1]]), drop = TRUE)
+write.csv(tweetsRBC, ".\\TweetsbyBank\\RBC.csv")
+sentimentRBC <- sentimentScore(tweetsRBC)
+
+tweetsScotia <- subset(fullData, grepl("@ScotiabankHelps", fullData[[1]]), drop = TRUE)
+write.csv(tweetsScotia, ".\\TweetsbyBank\\Scotia.csv")
+sentimentScotia <- sentimentScore(tweetsScotia)
+
+tweetsAmex <- subset(fullData, grepl("@AskAmex", fullData[[1]]), drop = TRUE)
+write.csv(tweetsAmex, ".\\TweetsbyBank\\Amex.csv")
+sentimentAmex <- sentimentScore(tweetsAmex)
+
+tweetsRegions <- subset(fullData, grepl("@askRegions", fullData[[1]]), drop = TRUE)
+write.csv(tweetsRegions, ".\\TweetsbyBank\\Regions.csv")
+sentimentRegions <- sentimentScore(tweetsRegions)
+
+tweetsMT <- subset(fullData, grepl("@MandT_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsMT, ".\\TweetsbyBank\\M&T.csv")
+sentimentMT <- sentimentScore(tweetsMT)
+
+tweetsKeyBank <- subset(fullData, grepl("@KeyBank_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsKeyBank, ".\\TweetsbyBank\\KeyBank.csv")
+sentimentKeyBank <- sentimentScore(tweetsKeyBank)
+
+tweetsUSAA <- subset(fullData, grepl("@USAA_help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsUSAA, ".\\TweetsbyBank\\USAA.csv")
+sentimentUSAA <- sentimentScore(tweetsUSAA)
+
+tweetsAlly <- subset(fullData, grepl("@AllyCare", fullData[[1]]), drop = TRUE)
+write.csv(tweetsAlly, ".\\TweetsbyBank\\Ally.csv")
+sentimentAlly <- sentimentScore(tweetsAlly)
+
+tweetsSantanderUK <- subset(fullData, grepl("@santanderukhelp", fullData[[1]]), drop = TRUE)
+write.csv(tweetsSantanderUK, ".\\TweetsbyBank\\SantanderUK.csv")
+sentimentSantanderUK <- sentimentScore(tweetsSantanderUK)
+
+tweetsSantanderUS <- subset(fullData, grepl("@SantanderBankUS", fullData[[1]]), drop = TRUE)
+write.csv(tweetsSantanderUS, ".\\TweetsbyBank\\SantanderUS.csv")
+sentimentSantanderUS <- sentimentScore(tweetsSantanderUS)
+
+tweetsHuntington <- subset(fullData, grepl("@AskHuntington", fullData[[1]]), drop = TRUE)
+write.csv(tweetsHuntington, ".\\TweetsbyBank\\Huntington.csv")
+sentimentHuntington <- sentimentScore(tweetsHuntington)
+
+tweetsSynchrony <- subset(fullData, grepl("@AskSynchrony", fullData[[1]]), drop = TRUE)
+write.csv(tweetsSynchrony, ".\\TweetsbyBank\\Synchrony.csv")
+sentimentSyncrhony <- sentimentScore(tweetsSynchrony)
+
+tweetsFirstMerit <- subset(fullData, grepl("@FirstMerit_Help", fullData[[1]]), drop = TRUE)
+write.csv(tweetsFirstMerit, ".\\TweetsbyBank\\FirstMerit.csv")
+sentimentFirstMerit <- sentimentScore(tweetsFirstMerit)
+
+tweetsWebster <- subset(fullData, grepl("@AskWebster", fullData[[1]]), drop = TRUE)
+write.csv(tweetsWebster, ".\\TweetsbyBank\\Webster.csv")
+sentimentWebster <- sentimentScore(tweetsWebster)
+
+tweetsZions <- subset(fullData, grepl("@AskZionsBank", fullData[[1]]), drop = TRUE)
+write.csv(tweetsZions, ".\\TweetsbyBank\\Zions.csv")
+sentimentZions <- sentimentScore(tweetsZions)
+
+tweetsBarclays <- subset(fullData, grepl("@BarclaysOnline", fullData[[1]]), drop = TRUE)
+write.csv(tweetsBarclays, ".\\TweetsbyBank\\Barclays.csv")
+sentimentBarclays <- sentimentScore(tweetsBarclays)
+
+sentimentMatrix <- matrix(c(sentimentBofA, sentimentCiti, sentimentChase, sentimentWellsFargo, sentimentPNC, sentimentCapitalOne, sentimentSunTrust, sentimentBBT, sentimentAmex), ncol=9)
+colnames(sentimentMatrix) = c("BofA", "Citi", "Chase", "WellsFargo", "PNC", "CapitalOne", "SunTrust", "BBT", "Amex")
+pdf(".\\Sentiment Score Graph.pdf")
+barplot(sentimentMatrix, main="Sentiment Scores", ylab="Score", xlab="Banks", cex.names=.65)
+dev.off()
 
 ############ Comparison Wordcloud: Top 4 ##################
 # @ChaseSupport @BofA_Help @AskCiti @Ask_WellsFargo
@@ -309,6 +375,7 @@ tweetTextBofA <- subset(fullData, grepl("@BofA_Help", fullData[[1]]), drop = TRU
 tweetTextCiti <- subset(fullData, grepl("@AskCiti", fullData[[1]]), drop = TRUE)
 tweetTextChase <- subset(fullData, grepl("@ChaseSupport", fullData[[1]]), drop = TRUE)
 tweetTextWellsFargo <- subset(fullData, grepl("@Ask_WellsFargo", fullData[[1]]), drop = TRUE)
+tweetsUSBank <- subset(fullData, grepl("@askusbank", fullData[[1]]), drop = TRUE)
 
 clean.text = function(x)
 {
