@@ -18,8 +18,8 @@ tweets = list()
   if (file.exists(saveFile)){file<- read.csv(saveFile)}
 
 # Merge the data in the file with our new tweets
-  df <- do.call("rbind", lapply(tweets, as.data.frame))
-  #df<-rbind(df,file)
+df <- do.call("rbind", lapply(tweets, as.data.frame))
+df<-rbind(df,file)
 
 # Remove duplicates
   df <- df[!duplicated(df[c("id")]),]
@@ -36,11 +36,12 @@ timelineToCSV <- function(query = sample(c("@ChaseSupport", "@BofA_Help", "@Ask_
   # Loop through the keywords and store results
   print("TestPoint")
   for(i in 1:length(query)){
+    
     print(i)
-    result <- userTimeline(query[[i]],n=1000)
+    result <- userTimeline(query[[i]],n=3000,sinceID=552205449744109000)
     tweets <- c(tweets,result)
-    tweets <- unique(tweets)
-  }
+    tweets <- unique(tweets) }
+  
   
   # Create a placeholder for the file
   file<-NULL
