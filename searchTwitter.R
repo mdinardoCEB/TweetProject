@@ -151,7 +151,7 @@ wordCloudTweets <- function(tweetText, stopWordsVec) {
   #create a corpus
   mach_corpus = Corpus(VectorSource(tweetText))
 
-  # create document term matrix applying some transformations
+  # create document term matrix applying some transformations"
 
   tdm = TermDocumentMatrix(mach_corpus,
                          control = list(removePunctuation = TRUE,
@@ -170,3 +170,27 @@ wordCloudTweets <- function(tweetText, stopWordsVec) {
   wordcloud(max.words = 200, dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
   #dev.off()
 }
+
+compileTweets <- function(bankTweets = TRUE, bankList = NULL) {
+      # Compiles total unique tweets, includes bank timeline tweets by default
+      tweets <- read.csv("TweetsDB.csv", stringsAsFactors = FALSE)
+      
+      if (bankTweets == TRUE) {
+            timelineTweets <- read.csv("TimelineDB.csv", stringsAsFactors = FALSE)
+            tweets <- rbind(tweets, timelineTweets)
+      }
+      
+      # Make sure no bank accounts submitted the Tweet
+      else if(bankTweets == FALSE) {
+            tweets <- tweets[(tweets$screenName %in% bankList) == FALSE,]
+      }
+      # Remove duplicates
+      tweets[!duplicated(tweets),]
+      # Return dataframe
+      
+      tweets
+}
+
+
+
+
