@@ -1,6 +1,5 @@
 queryToCSV <- function(query = sample(c("@ChaseSupport", "@BofA_Help", "@Ask_WellsFargo", "@AskCiti", "@askusbank", "@PNCBank_Help", "@AskCapitalOne", "@AskSunTrust", "@askBBT", "@HSBC_US_Help", "@HSBC_UK_Help", "@EverBankHelp", "@AskRBC", "@ScotiabankHelps", "@AskAmex", "@askRegions", "@MandT_Help", "@KeyBank_Help", "@USAA_help", "@AllyCare", "@santanderukhelp", "SantanderBankUS", "@AskHuntington", "@AskSynchrony", "@FirstMerit_Help", "@AskWebster", "@AskZionsBank", "@BarclaysUKHelp"))
 , numberTweets, saveFile) {
-
 tweets = list()
 
 # Loop through the keywords and store results
@@ -11,21 +10,27 @@ tweets = list()
     tweets <- unique(tweets)
   }
 
+
 # Create a placeholder for the file
   file<-NULL
-
+  fileBackup <- NULL
 # Check if tweets.csv exists
-  if (file.exists(saveFile)){file<- read.csv(saveFile)}
+  if (file.exists(saveFile)){file<- read.csv(saveFile, stringsAsFacotrs = FALSE)}
+
+backupFile <- "backupTweetsDB.csv"
+if (file.exists(backupFile)){fileBackup<- read.csv("backupTweetsDB.csv", stringsAsFacotrs = FALSE)}
 
 # Merge the data in the file with our new tweets
 df <- do.call("rbind", lapply(tweets, as.data.frame))
 df<-rbind(df,file)
+df2 <- rbind(df, fileBackup)
 
 # Remove duplicates
   df <- df[!duplicated(df[c("id")]),]
-
+  df2 <- df2[!duplicated(df2[c("id")]),]
 # Save
   write.csv(df,file=saveFile,row.names=FALSE)
+  write.csv(df2, file=backupFile,row.names = FALSE)
 
 } 
 
@@ -45,20 +50,21 @@ timelineToCSV <- function(query = sample(c("@ChaseSupport", "@BofA_Help", "@Ask_
   
   # Create a placeholder for the file
   file<-NULL
-  
+  fileBackup <- NULL
   # Check if tweets.csv exists
   if (file.exists(saveFile)){file<- read.csv(saveFile)}
-  
+  backupFile <- "backupTimelineDB.csv"
+  if (file.exists(backupFile)){fileBackup<- read.csv(backupFile)}
   # Merge the data in the file with our new tweets
   df <- do.call("rbind", lapply(tweets, as.data.frame))
   df<-rbind(df,file)
-  
+  df2 <- rbind(df, fileBackup)
   # Remove duplicates
   df <- df[!duplicated(df[c("id")]),]
-  
+  df2 <- df2[!duplicated(df2[c("id")]),]
   # Save
   write.csv(df,file=saveFile,row.names=FALSE)
-  
+  write.csv(df2, file=backupFile, row.names = FALSE)
   tweets
   
 } 
