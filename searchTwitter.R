@@ -15,15 +15,17 @@ tweets = list()
   file<-NULL
   fileBackup <- NULL
 # Check if tweets.csv exists
-  if (file.exists(saveFile)){file<- read.csv(saveFile, stringsAsFacotrs = FALSE)}
+  if (file.exists(saveFile)){file<- read.csv(saveFile, stringsAsFactors = FALSE)}
 
 backupFile <- "backupTweetsDB.csv"
-if (file.exists(backupFile)){fileBackup<- read.csv("backupTweetsDB.csv", stringsAsFacotrs = FALSE)}
+if (file.exists(backupFile)){fileBackup<- read.csv("backupTweetsDB.csv", 
+                                                   stringsAsFactors= FALSE)}
 
 # Merge the data in the file with our new tweets
 df <- do.call("rbind", lapply(tweets, as.data.frame))
+df2 <- df
 df<-rbind(df,file)
-df2 <- rbind(df, fileBackup)
+df2 <- rbind(df2, fileBackup)
 
 # Remove duplicates
   df <- df[!duplicated(df[c("id")]),]
@@ -52,12 +54,13 @@ timelineToCSV <- function(query = sample(c("@ChaseSupport", "@BofA_Help", "@Ask_
   file<-NULL
   fileBackup <- NULL
   # Check if tweets.csv exists
-  if (file.exists(saveFile)){file<- read.csv(saveFile)}
+  if (file.exists(saveFile)){file<- read.csv(saveFile, stringsAsFactors = FALSE)}
   backupFile <- "backupTimelineDB.csv"
-  if (file.exists(backupFile)){fileBackup<- read.csv(backupFile)}
+  if (file.exists(backupFile)){fileBackup<- read.csv(backupFile, stringsAsFactors=FALSE)}
   # Merge the data in the file with our new tweets
   df <- do.call("rbind", lapply(tweets, as.data.frame))
-  df<-rbind(df,file)
+  df2 <- df
+  df<-rbind(df2,file)
   df2 <- rbind(df, fileBackup)
   # Remove duplicates
   df <- df[!duplicated(df[c("id")]),]
